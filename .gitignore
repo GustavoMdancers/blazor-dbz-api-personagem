@@ -10,6 +10,9 @@
 *.userosscache
 *.sln.docstates
 *.env
+.env
+.env.*
+!.env.example
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -425,4 +428,8 @@ FodyWeavers.xsd
 *.msp
 
 # Official VS Code C# Dev Kit Extension exclusion
-#*.lscache
+*.lscache
+
+# JetBrains Rider
+.idea/
+*.sln.iml
