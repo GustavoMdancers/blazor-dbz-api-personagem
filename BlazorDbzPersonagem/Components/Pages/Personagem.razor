@@ -1,0 +1,65 @@
+@page "/personagem"
+@using BlazorDbzPersonagem.Models
+@using BlazorDbzPersonagem.Services
+@using PersonagemModel = BlazorDbzPersonagem.Models.Personagem
+@inject DbzService Dbz
+
+<PageTitle>Personagem Dragon Ball</PageTitle>
+
+<h1>Consulta de Personagem - Dragon Ball</h1>
+
+<div class="mb-3">
+    <label class="form-label">ID do personagem:</label>
+    <input type="number" min="1" class="form-control w-25 mb-2" @bind="id" />
+    <button class="btn btn-primary" @onclick="Buscar">Buscar</button>
+</div>
+
+@if (carregando)
+{
+    <p><em>Carregando...</em></p>
+}
+else if (naoEncontrado)
+{
+    <div class="alert alert-warning">Personagem não encontrado.</div>
+}
+else if (personagem is not null)
+{
+    <div class="card p-3">
+        <h3>@personagem.Name</h3>
+        <p><strong>Planeta:</strong> @(personagem.OriginPlanet?.Name ?? "Desconhecido")</p>
+
+        <p><strong>Transformações:</strong></p>
+        @if (personagem.Transformations.Any())
+        {
+            <ul>
+                @foreach (var t in personagem.Transformations)
+                {
+                    <li>@t.Name</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>Este personagem não possui transformações.</p>
+        }
+    </div>
+}
+
+@code {
+    private int id = 1;
+    private PersonagemModel? personagem;
+    private bool carregando;
+    private bool naoEncontrado;
+
+    private async Task Buscar()
+    {
+        carregando = true;
+        naoEncontrado = false;
+        personagem = null;
+
+        personagem = await Dbz.ObterPersonagemAsync(id);
+        naoEncontrado = personagem is null;
+
+        carregando = false;
+    }
+}
